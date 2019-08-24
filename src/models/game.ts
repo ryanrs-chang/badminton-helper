@@ -1,7 +1,7 @@
 import * as Sequelize from "sequelize";
 import { Status } from "../config";
 import { UserInstance } from "./user";
-interface GameAttributes {
+export interface GameAttributes {
   id?: string;
   description: string;
   status?: Status;

@@ -1,6 +1,6 @@
 import * as line from "@line/bot-sdk";
 import database from "../database";
-import { GameInstance } from "../models/game";
+import { GameInstance, GameAttributes } from "../models/game";
 import { UserInstance } from "../models/user";
 import { UserGameInstance } from "../models/user_game";
 import { Status } from "../config";
@@ -67,4 +67,39 @@ export async function removeUserFromsGame(
   );
 
   return await findGameWithMembers(game);
+}
+
+/**
+ *
+ * @param groupId
+ *
+ *
+ * TODO: must be filter user
+ *
+ */
+export async function getGameList(
+  groupId: string,
+  userId: string
+): Promise<GameInstance[]> {
+  const games = await database.Game.findAll({
+    where: {
+      groupId: groupId
+    }
+  });
+  return games;
+}
+
+/**
+ * create new game
+ * @param groupId
+ * @param gameAttr
+ */
+export async function createNewGame(groupId: string, gameAttr: GameAttributes) {
+  const game = await database.Game.create({
+    description: gameAttr.description,
+    start_time: new Date(),
+    groupId: groupId
+  });
+
+  return game;
 }

@@ -9,6 +9,10 @@ export enum Role {
 
 export enum Status {
   Normal = "normal",
-  Deleted = "deleted",
+  Deleted = "deleted"
+}
 
+export enum UserType {
+  Line = "line",
+  Undefined = "undefined"
 }

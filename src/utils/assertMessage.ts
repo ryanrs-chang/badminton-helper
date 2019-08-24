@@ -36,9 +36,13 @@ export async function isCreateGameByManager(
     where: { userId: event.source.userId, groupId }
   });
 
+
+  console.log("asdfasdf")
   if (!userGroup) {
     return false;
   }
+
+  console.log("asdfasdf111111111111111")
 
   return userGroup.role >= Role.Manager;
 }

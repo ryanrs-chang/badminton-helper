@@ -4,10 +4,10 @@ import { Role } from "../config";
 interface UserGroupAttributes {
   userId?: string;
   groupId?: string;
-  role: Role;
+  role?: Role;
 }
 
-type UserGroupInstance = Sequelize.Instance<UserGroupAttributes> &
+export type UserGroupInstance = Sequelize.Instance<UserGroupAttributes> &
   UserGroupAttributes;
 
 export default (sequalize: Sequelize.Sequelize) => {

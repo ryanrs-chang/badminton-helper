@@ -40,7 +40,7 @@ export default async function signUpGameInGroup(
   await updateGroup(groupSource.groupId);
 
   // find user and get profile
-  const user = await findOneUser(client, groupSource);
+  const user = await findOneUser(groupSource);
 
   const { groupId, userId } = groupSource;
   // register user to group
