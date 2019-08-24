@@ -9,13 +9,16 @@ import { UserInstance } from "../models/user";
  */
 export async function findOneUser(
   client: line.Client,
-  source: line.EventSource
+  source: line.Group
 ): Promise<UserInstance> {
   let user = await database.User.findOne({
     where: { id: source.userId }
   });
   if (!user) {
-    const line_user = await client.getProfile(source.userId);
+    const line_user = await client.getGroupMemberProfile(
+      source.groupId,
+      source.userId
+    );
     const [record, created] = await database.User.upsert(
       {
         id: line_user.userId,

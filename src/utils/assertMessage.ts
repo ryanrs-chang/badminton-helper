@@ -1,7 +1,6 @@
 import line from "@line/bot-sdk";
 import database from "../database";
 import { Role } from "../config";
-import db from "../database";
 
 export function isSignUpInGroup(event: line.WebhookEvent): boolean | string {
   if (!event) return false;
@@ -14,8 +13,9 @@ export function isSignUpInGroup(event: line.WebhookEvent): boolean | string {
     return false;
   }
 
-  const ret = /[-\+]1$/g.test(event.message.text);
-  return ret;
+  // const ret = /[-\+]1$/g.test(event.message.text);
+  const message = event.message.text;
+  return message === "+1" || message === "-1";
 }
 
 export async function isCreateGameByManager(

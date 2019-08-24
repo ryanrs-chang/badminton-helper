@@ -1,5 +1,5 @@
 import * as line from "@line/bot-sdk";
-import { TextEventMessage } from "@line/bot-sdk";
+import { TextEventMessage, TemplateConfirm } from "@line/bot-sdk";
 import database from "../database";
 import { Role } from "../config";
 import { findOneUser } from "../modules/userHelper";
@@ -11,6 +11,8 @@ import {
   removeUserFromsGame
 } from "../modules/gameHelper";
 import { client } from "./index";
+import Debug from "debug";
+const debug = Debug("badminton:signupGameInGroup");
 
 function replyMessage(event: line.MessageEvent, text: string) {
   const echo: TextEventMessage = {
@@ -38,7 +40,7 @@ export default async function signUpGameInGroup(
   await updateGroup(groupSource.groupId);
 
   // find user and get profile
-  const user = await findOneUser(client, event.source);
+  const user = await findOneUser(client, groupSource);
 
   const { groupId, userId } = groupSource;
   // register user to group
@@ -58,12 +60,15 @@ export default async function signUpGameInGroup(
   switch (getMessage(event)) {
     case "+1":
       game = await addUserToGame(user, lastestGame);
-      console.log(`${user.display_name} order successful!`);
+      debug(`${user.display_name} order successful!`);
       break;
     case "-1":
       game = await removeUserFromsGame(user, lastestGame);
-      console.log(`${user.display_name}'s order cancelled.`);
+      debug(`${user.display_name}'s order cancelled.`);
       break;
+    default:
+      debug(`no match event!`);
+      return;
   }
   const users = game.users.map(
     (user, index) => `${index + 1}.${user.display_name}\n`

@@ -1,4 +1,3 @@
-import * as line from "@line/bot-sdk";
 import database from "../database";
 import { GroupInstance } from "../models/group";
 
