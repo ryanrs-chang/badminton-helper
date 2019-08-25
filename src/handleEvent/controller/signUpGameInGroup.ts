@@ -1,16 +1,16 @@
 import * as line from "@line/bot-sdk";
 import { TextEventMessage, TemplateConfirm } from "@line/bot-sdk";
-import database from "../database";
-import { Role } from "../config";
-import { findOneUser } from "../modules/userHelper";
-import { updateGroup } from "../modules/groupHelper";
-import { getMessage } from "../utils";
+import database from "../../database";
+import { Role } from "../../config";
+import { findOneUser } from "../../modules/userHelper";
+import { updateGroup } from "../../modules/groupHelper";
+import { getMessage } from "../../utils";
 import {
   getLatestGameByGroup,
   addUserToGame,
   removeUserFromsGame
-} from "../modules/gameHelper";
-import { client } from "./index";
+} from "../../modules/gameHelper";
+import { client } from "../index";
 import Debug from "debug";
 const debug = Debug("badminton:signupGameInGroup");
 

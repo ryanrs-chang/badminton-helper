@@ -1,6 +1,6 @@
 import * as line from "@line/bot-sdk";
 import { TextEventMessage } from "@line/bot-sdk";
-import database from "../database";
+import database from "../../database";
 
 export default async function joinGroup(
   client: line.Client,

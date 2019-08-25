@@ -23,7 +23,7 @@ app.use(router.allowedMethods());
 
 router.post("/callback", LineMiddleware(config), async ctx => {
   try {
-    ctx.body = await Promise.all(ctx.request.body.events.map(handleEvent));
+    ctx.body = await handleEvent(ctx.request.body.events);
   } catch (err) {
     console.error(err);
     ctx.status = 500;
