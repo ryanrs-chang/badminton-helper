@@ -28,6 +28,8 @@ import * as utils from "../utils";
 //    { groupId: 'Cce9702dfcdf2824f50f89fd9054546c0', type: 'group' },
 //   timestamp: 1566629933179,
 //   joined: { members: [ [Object] ] } }
+
+
 export default async function handleEvent(event: line.WebhookEvent) {
   debug(`event:\n`, event);
 
