@@ -16,6 +16,13 @@ const config = {
 
 const app = new Koa();
 const router = new Router();
+app.use(async function(ctx, next) {
+  const start = Date.now();
+  await next();
+  const ms = Date.now() - start;
+  console.log(`response time: ${ms}ms`);
+  ctx.set("X-Response-Time", `${ms}ms`);
+});
 
 app.use(bodyParser());
 app.use(router.routes());

@@ -7,7 +7,11 @@ import handleJoin from "./join";
 import handlePostback from "./postback";
 import handleMemberJoin from "./memberJoin";
 import handleMemberLeave from "./memberLeave";
-import { updateUser } from "../modules/userHelper";
+
+import {
+  updateUserInMessageEvent,
+  updateGroupUserInJoin
+} from "../modules/userHelper";
 
 import { channelAccessToken, channelSecret } from "../config";
 export const client = new line.Client({
@@ -24,7 +28,7 @@ export async function dispatchEvent(event: line.WebhookEvent) {
     case "message":
       //
       debug(`dispatch to message: `, JSON.stringify(event, null, 2));
-      await updateUser(client, event.source as any);
+      await updateUserInMessageEvent(client, event);
       await handleMessage(client, event);
       //
       break;
@@ -36,7 +40,7 @@ export async function dispatchEvent(event: line.WebhookEvent) {
     case "memberJoined":
       //
       debug(`dispatch to message: `, JSON.stringify(event, null, 2));
-      await updateUser(client, event.source as any);
+      await updateGroupUserInJoin(client, event);
       await handleMemberJoin(client, event);
       //
       break;
@@ -53,7 +57,10 @@ export async function dispatchEvent(event: line.WebhookEvent) {
       //
       break;
     default:
-      debug("not found function handle this event: ", JSON.stringify(event, null, 2));
+      debug(
+        "not found function handle this event: ",
+        JSON.stringify(event, null, 2)
+      );
   }
 
   return Promise.resolve(null);
