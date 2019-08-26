@@ -11,7 +11,7 @@ export function LineMiddleware(config: line.Config) {
     }
 
     if (!signature) {
-      await next(new line.SignatureValidationFailed("no signature"));
+      await next(new Error("no signature"));
       return;
     }
 
@@ -23,12 +23,7 @@ export function LineMiddleware(config: line.Config) {
       return await next();
     }
 
-    await next(
-      new line.SignatureValidationFailed(
-        "signature validation failed",
-        signature
-      )
-    );
+    await next(new Error(`signature validation failed ${signature}`));
     return;
   };
 }
