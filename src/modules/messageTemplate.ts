@@ -1,6 +1,7 @@
 import line from "@line/bot-sdk";
 import { UserGroupInstance } from "../models/user_group";
 import { GameInstance } from "../models/game";
+import { UserInstance } from "../models/user";
 
 /**
  * Help Message: user say help!!
@@ -77,6 +78,24 @@ export function CreateGameMessage(game: GameInstance): line.Message {
   if (game) {
     message = `create ${game.description} game is successful`;
   }
+
+  return {
+    type: "text",
+    text: message
+  };
+}
+
+export function SignupMessage(
+  title: string,
+  users: UserInstance[]
+): line.Message {
+  let message = title || "";
+
+  message += "\n";
+
+  users.forEach((user, index) => {
+    message += `${index + 1}.${user.display_name}\n`;
+  });
 
   return {
     type: "text",

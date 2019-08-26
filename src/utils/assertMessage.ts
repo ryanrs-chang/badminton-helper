@@ -13,9 +13,17 @@ export function isSignUpInGroup(event: line.WebhookEvent): boolean | string {
     return false;
   }
 
-  // const ret = /[-\+]1$/g.test(event.message.text);
   const message = event.message.text;
-  return message === "+1" || message === "-1";
+  if (
+    /[-\+]1$/g.test(message) ||
+    /^本週零打開始報名/g.test(message) ||
+    /^本週零打報名結束/g.test(message) ||
+    /^\#.*.[\+\-]1$/g.test(message) // helo another people signup
+  ) {
+    return true;
+  }
+
+  return false;
 }
 
 export async function isCreateGameByManager(
@@ -36,13 +44,9 @@ export async function isCreateGameByManager(
     where: { userId: event.source.userId, groupId }
   });
 
-
-  console.log("asdfasdf")
   if (!userGroup) {
     return false;
   }
-
-  console.log("asdfasdf111111111111111")
 
   return userGroup.role >= Role.Manager;
 }

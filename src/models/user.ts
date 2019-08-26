@@ -3,8 +3,8 @@ import { UserType } from "../config";
 
 export interface UserAttributes {
   id?: string;
-  display_name: string;
-  picture_url: string;
+  display_name?: string;
+  picture_url?: string;
   type?: UserType;
 }
 
@@ -14,11 +14,13 @@ export default (sequalize: Sequelize.Sequelize) => {
   const attributes: SequelizeAttributes<UserAttributes> = {
     id: {
       type: Sequelize.STRING,
-      primaryKey: true
+      primaryKey: true,
+      unique: true,
+      defaultValue: Sequelize.UUIDV4
     },
     type: {
-      type: Sequelize.ENUM(UserType.Undefined, UserType.Line),
-      defaultValue: UserType.Undefined
+      type: Sequelize.ENUM(UserType.Unknown, UserType.Line),
+      defaultValue: UserType.Unknown
     },
     display_name: {
       type: Sequelize.STRING,
@@ -26,7 +28,7 @@ export default (sequalize: Sequelize.Sequelize) => {
     },
     picture_url: {
       type: Sequelize.STRING,
-      allowNull: false
+      allowNull: true
     }
   };
   return sequalize.define<UserInstance, UserAttributes>("user", attributes);

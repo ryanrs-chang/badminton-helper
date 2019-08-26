@@ -14,7 +14,8 @@ export enum Status {
 
 export enum UserType {
   Line = "line",
-  Undefined = "undefined"
+  Unknown = "Unknown"
 }
 
+export const TITLE_MESSAGE = "本週零打開始報名";
 export const LINE_VERIFY_USER_ID = "Udeadbeefdeadbeefdeadbeefdeadbeef";

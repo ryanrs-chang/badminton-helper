@@ -1,31 +1,10 @@
 import * as line from "@line/bot-sdk";
 import database from "../database";
-import { UserType, LINE_VERIFY_USER_ID } from "../config";
+import { UserType, LINE_VERIFY_USER_ID, Status } from "../config";
 import Debug from "debug";
 import { UserInstance } from "../models/user";
-const debug = Debug("badminton:hadnlerEvent");
-
-// {
-//   "replyToken": "0f3779fba3b349968c5d07db31eabf65",
-//   "type": "memberJoined",
-//   "timestamp": 1462629479859,
-//   "source": {
-//     "type": "group",
-//     "groupId": "C4af4980629..."
-//   },
-//   "joined": {
-//     "members": [
-//       {
-//        "type": "user",
-//         "userId": "U4af4980629..."
-//       },
-//       {
-//         "type": "user",
-//         "userId": "U91eeaf62d9..."
-//       }
-//     ]
-//   }
-// }
+import { GameInstance } from "../models/game";
+const debug = Debug("badminton:userHelper");
 
 /**
  * get User by Group
@@ -116,7 +95,56 @@ export async function updateGroupUserInJoin(
 }
 
 export async function findOneUser(source: line.Group) {
-  return await database.User.findOne({
+  return database.User.findOne({
     where: { id: source.userId }
   });
+}
+
+export async function registerUnknownUser(user: string) {
+  return database.User.create({
+    display_name: user,
+    type: UserType.Unknown
+  });
+}
+
+/**
+ *
+ * @param display_name user display name
+ * @param gameId
+ */
+export async function findOneUserByNameInGame(
+  display_name: string,
+  game: GameInstance
+): Promise<UserInstance> {
+  //
+  // workaround: should use query by 'include'
+  //
+
+  const users = await database.User.findAll({
+    where: { display_name, type: UserType.Unknown }
+  });
+  if (users.length === 0) {
+    return Promise.resolve(null);
+  }
+
+  let userGames = await Promise.all(
+    users.map(user =>
+      database.UserGame.findOne({
+        where: {
+          gameId: game.id,
+          userId: user.id,
+          status: { $ne: Status.Deleted }
+        }
+      })
+    )
+  );
+
+  userGames = userGames.filter(userGame => userGame !== null);
+  if (userGames.length !== 1) {
+    debug("userGames: ", userGames);
+    return Promise.resolve(null);
+  }
+  const userGame = userGames.pop();
+
+  return await database.User.findOne({ where: { id: userGame.userId } });
 }
