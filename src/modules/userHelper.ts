@@ -1,6 +1,6 @@
 import * as line from "@line/bot-sdk";
 import database from "../database";
-import { UserType } from "../config";
+import { UserType, LINE_VERIFY_USER_ID } from "../config";
 import Debug from "debug";
 import { UserInstance } from "../models/user";
 const debug = Debug("badminton:hadnlerEvent");
@@ -45,6 +45,8 @@ export async function updateUserInMessageEvent(
         when chat with single user
 
      */
+    if (source.userId === LINE_VERIFY_USER_ID) return;
+
     line_user = await client.getProfile(source.userId);
     await database.User.upsert({
       id: line_user.userId,

@@ -16,3 +16,5 @@ export enum UserType {
   Line = "line",
   Undefined = "undefined"
 }
+
+export const LINE_VERIFY_USER_ID = "Udeadbeefdeadbeefdeadbeefdeadbeef";
