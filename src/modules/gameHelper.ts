@@ -11,7 +11,8 @@ export async function getLatestGameByGroup(
 ): Promise<GameInstance> {
   const game = await database.Game.findOne({
     where: {
-      groupId
+      groupId,
+      status: Status.Normal
     },
     order: [["created_time", "DESC"]]
   });
@@ -57,7 +58,7 @@ export async function addUserToGame(
   return await findGameWithMembers(game);
 }
 
-export async function removeUserFromsGame(
+export async function removeUserFromGame(
   user: UserInstance,
   game: GameInstance
 ): Promise<GameInstance> {
@@ -102,4 +103,20 @@ export async function createNewGame(groupId: string, gameAttr: GameAttributes) {
   });
 
   return game;
+}
+
+/**
+ * end specific game
+ * @param game game instance
+ */
+export async function endGame(game: GameInstance): Promise<GameInstance> {
+  await database.Game.update(
+    {
+      status: Status.Completed,
+      end_time: new Date()
+    },
+    { where: { id: game.id } }
+  );
+
+  return await findGameWithMembers(game);
 }

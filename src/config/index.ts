@@ -9,7 +9,8 @@ export enum Role {
 
 export enum Status {
   Normal = "normal",
-  Deleted = "deleted"
+  Deleted = "deleted",
+  Completed = "completed"
 }
 
 export enum UserType {

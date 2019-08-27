@@ -25,7 +25,7 @@ export default (sequalize: Sequelize.Sequelize) => {
       type: Sequelize.STRING
     },
     status: {
-      type: Sequelize.ENUM(Status.Normal, Status.Deleted),
+      type: Sequelize.ENUM(Status.Normal, Status.Deleted,Status.Completed),
       defaultValue: Status.Normal
     },
     created_time: {
