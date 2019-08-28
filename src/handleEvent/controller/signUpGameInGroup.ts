@@ -15,6 +15,7 @@ import {
   endGame
 } from "../../modules/gameHelper";
 import { GameInstance } from "../../models/game";
+import { isEmpty } from "lodash";
 import Debug from "debug";
 const debug = Debug("badminton:signupGameInGroup:debug");
 const info = Debug("badminton:signupGameInGroup");
@@ -27,6 +28,15 @@ replyStartingMessage += "喊 +1 會幫你報名\n";
 replyStartingMessage += "喊 -1 會取消報名\n";
 replyStartingMessage += "喊 #Jason+1 會幫 Jason 報名\n";
 replyStartingMessage += "喊 #Jason-1 會幫 Jason 取消\n";
+
+function getSafeName(message: string): string {
+  const name = message.substring(1, message.length - 2);
+  if (isEmpty(name)) {
+    return null;
+  }
+  return name.trim();
+}
+
 export default async function signUpGameInGroup(
   client: line.Client,
   event: line.MessageEvent
@@ -100,8 +110,9 @@ export default async function signUpGameInGroup(
 
   //
   // handle #<Name>+1
-  if (/^\#.*\+1$/g.test(message)) {
-    const name = message.substring(1, message.length - 2);
+  if (/^\#.+\+1$/g.test(message)) {
+    const name = getSafeName(message);
+    if (!name) return;
     info("[#Name+1]", name);
 
     const existUser = await findOneUnknownUserByDisplayNameInGame(
@@ -121,8 +132,9 @@ export default async function signUpGameInGroup(
 
     //
     // handle #<Name>-1
-  } else if (/^\#.*\-1$/g.test(message)) {
-    const name = message.substring(1, message.length - 2);
+  } else if (/^\#.+\-1$/g.test(message)) {
+    const name = getSafeName(message);
+    if (!name) return;
     info("[#Name-1]", name);
 
     const user = await findOneUnknownUserByDisplayNameInGame(name, lastestGame);

@@ -26,6 +26,9 @@ export async function findGameWithMembers(
     where: {
       id: game.id
     },
+    //
+    // order by updated time of UserGmae
+    order: [[database.User, database.UserGame, "updated_time", "ASC"]],
     include: [
       {
         model: database.User,
@@ -52,7 +55,8 @@ export async function addUserToGame(
   const updated = await database.UserGame.upsert({
     userId: user.id,
     gameId: game.id,
-    status: Status.Normal
+    status: Status.Normal,
+    updated_time: new Date()
   });
 
   return await findGameWithMembers(game);
@@ -63,7 +67,7 @@ export async function removeUserFromGame(
   game: GameInstance
 ): Promise<GameInstance> {
   const updated = await database.UserGame.update(
-    { status: Status.Deleted },
+    { status: Status.Deleted, updated_time: new Date() },
     { where: { userId: user.id, gameId: game.id } }
   );
 

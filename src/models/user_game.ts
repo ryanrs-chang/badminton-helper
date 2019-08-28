@@ -4,6 +4,7 @@ interface UserGameAttributes {
   userId?: string;
   gameId?: string;
   status?: Status;
+  updated_time?: Date;
 }
 
 export type UserGameInstance = Sequelize.Instance<UserGameAttributes> &
@@ -14,6 +15,10 @@ export default (sequalize: Sequelize.Sequelize) => {
     status: {
       type: Sequelize.ENUM(Status.Normal, Status.Deleted),
       defaultValue: Status.Normal
+    },
+    updated_time: {
+      type: Sequelize.DATE,
+      defaultValue: new Date()
     }
   };
   return sequalize.define<UserGameInstance, UserGameAttributes>(
