@@ -1,12 +1,11 @@
 {
-  "name": "express-typescript-starter",
+  "name": "badminton-helper",
   "version": "0.1.0",
-  "description": "A starting point for Node.js express apps with TypeScript",
+  "description": "",
   "repository": {
-    "type": "git",
-    "url": "https://github.com/Microsoft/TypeScript-Node-Starter"
+    "type": "git"
   },
-  "author": "Bowden Kelly",
+  "author": "Ryan Chang <ppppp196@gmail.com>",
   "license": "MIT",
   "scripts": {
     "start": "npm run serve",
