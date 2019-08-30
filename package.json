@@ -1,6 +1,10 @@
 {
   "name": "badminton-helper",
+<<<<<<< HEAD
   "version": "0.1.1",
+=======
+  "version": "0.1.0",
+>>>>>>> abb2eee... reconfig .env.example package.json
   "description": "",
   "repository": {
     "type": "git"
