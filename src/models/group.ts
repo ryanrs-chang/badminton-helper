@@ -1,6 +1,6 @@
 import * as Sequelize from "sequelize";
 
-interface GroupAttributes {
+export interface GroupAttributes {
   id?: string;
 }
 

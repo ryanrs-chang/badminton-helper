@@ -10,7 +10,9 @@ export interface UserAttributes {
 
 export type UserInstance = Sequelize.Instance<UserAttributes> & UserAttributes;
 
-export default (sequalize: Sequelize.Sequelize) => {
+export default (
+  sequalize: Sequelize.Sequelize
+): Sequelize.Model<UserInstance, UserAttributes> => {
   const attributes: SequelizeAttributes<UserAttributes> = {
     id: {
       type: Sequelize.STRING,

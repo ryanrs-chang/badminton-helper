@@ -1,5 +1,5 @@
 import line from "@line/bot-sdk";
-import { UserGroupInstance } from "../models/user_group";
+import { UserGroupInstance } from "../models/userGroup";
 import { GameInstance } from "../models/game";
 import { UserInstance } from "../models/user";
 

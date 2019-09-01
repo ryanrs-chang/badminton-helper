@@ -2,7 +2,7 @@ import * as line from "@line/bot-sdk";
 import database from "../database";
 import { GameInstance, GameAttributes } from "../models/game";
 import { UserInstance } from "../models/user";
-import { UserGameInstance } from "../models/user_game";
+import { UserGameInstance } from "../models/userGame";
 import { Status } from "../config";
 import sequelize = require("sequelize");
 import isArray from "lodash/isArray";

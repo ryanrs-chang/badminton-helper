@@ -1,4 +1,6 @@
 import Sequelize, { Model } from "sequelize";
+import { DatabaseInstance } from "./type";
+import importModels from "./importModels";
 
 const sequelize = new Sequelize.Sequelize(
   process.env.DB_NAME,
@@ -20,32 +22,10 @@ const sequelize = new Sequelize.Sequelize(
   }
 );
 
-export interface DatabaseModel {
-  [key: string]: Model<any, any>;
-}
-import User from "../models/user";
-import Group from "../models/group";
-import UserGroup from "../models/user_group";
-import Role from "../models/role";
-import Game from "../models/game";
-import UserGame from "../models/user_game";
-
-const db = {
+const db: DatabaseInstance = {
   sequelize,
-  Sequelize,
-  User: User(sequelize),
-  Group: Group(sequelize),
-  UserGroup: UserGroup(sequelize),
-  Game: Game(sequelize),
-  Role: Role(sequelize),
-  UserGame: UserGame(sequelize)
-};
-
-Object.values(db).forEach((model: any) => {
-  if (model.associate) {
-    model.associate(db);
-  }
-});
+  Sequelize
+} as DatabaseInstance;
 
 async function defineModels() {
   db.Group.belongsToMany(db.User, { through: db.UserGroup });
@@ -84,6 +64,8 @@ async function defaultDBValue() {
 
 export async function init() {
   try {
+    await importModels(db);
+
     defineModels();
     await sequelize.authenticate();
     // await sequelize.sync({ force: true });

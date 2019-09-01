@@ -1,13 +1,13 @@
 import * as Sequelize from "sequelize";
 import { Role } from "../config";
 
-interface RoleAttributes {
+export interface RoleAttributes {
   id?: number;
   description: string;
   level: Role;
 }
 
-type RoleInstance = Sequelize.Instance<RoleAttributes> & RoleAttributes;
+export type RoleInstance = Sequelize.Instance<RoleAttributes> & RoleAttributes;
 
 export default (sequalize: Sequelize.Sequelize) => {
   const attributes: SequelizeAttributes<RoleAttributes> = {

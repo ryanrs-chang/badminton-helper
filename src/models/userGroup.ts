@@ -1,7 +1,7 @@
 import * as Sequelize from "sequelize";
 import { Role } from "../config";
 
-interface UserGroupAttributes {
+export interface UserGroupAttributes {
   userId?: string;
   groupId?: string;
   role?: Role;

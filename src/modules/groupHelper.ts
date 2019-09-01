@@ -1,6 +1,6 @@
 import database from "../database";
 import { GroupInstance } from "../models/group";
-import { UserGroupInstance } from "../models/user_group";
+import { UserGroupInstance } from "../models/userGroup";
 import { Role } from "../config";
 export async function updateGroup(groupId: string): Promise<GroupInstance> {
   if (!groupId) {
