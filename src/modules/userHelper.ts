@@ -12,7 +12,7 @@ export async function updateUserWhenMessageEvent(
   client: line.Client,
   event: line.WebhookEvent
 ): Promise<void> {
-  let line_user: line.Profile;
+  let lineUser: line.Profile;
   let source: line.Group | line.User = event.source as any;
 
   if (source.type === "user") {
@@ -23,11 +23,11 @@ export async function updateUserWhenMessageEvent(
      */
     if (source.userId === LINE_VERIFY_USER_ID) return;
 
-    line_user = await client.getProfile(source.userId);
+    lineUser = await client.getProfile(source.userId);
     await database.User.upsert({
-      id: line_user.userId,
-      display_name: line_user.displayName,
-      picture_url: line_user.pictureUrl,
+      id: lineUser.userId,
+      displayName: lineUser.displayName,
+      pictureUrl: lineUser.pictureUrl,
       type: UserType.Line
     });
   } else if (source.type === "group") {
@@ -36,7 +36,7 @@ export async function updateUserWhenMessageEvent(
         when chatbot in group
 
     */
-    line_user = await client.getGroupMemberProfile(
+    lineUser = await client.getGroupMemberProfile(
       source.groupId,
       source.userId
     );
@@ -44,9 +44,9 @@ export async function updateUserWhenMessageEvent(
     // update group and user
     await Promise.all([
       await database.User.upsert({
-        id: line_user.userId,
-        display_name: line_user.displayName,
-        picture_url: line_user.pictureUrl,
+        id: lineUser.userId,
+        displayName: lineUser.displayName,
+        pictureUrl: lineUser.pictureUrl,
         type: UserType.Line
       }),
       await database.Group.upsert({
@@ -54,7 +54,7 @@ export async function updateUserWhenMessageEvent(
       })
     ]);
     await database.UserGroup.upsert({
-      userId: line_user.userId,
+      userId: lineUser.userId,
       groupId: source.groupId
     });
   }
@@ -81,8 +81,8 @@ export async function updateGroupUserWhenJoin(
     userProfile.map(profile =>
       database.User.upsert({
         id: profile.userId,
-        display_name: profile.displayName,
-        picture_url: profile.pictureUrl,
+        displayName: profile.displayName,
+        pictureUrl: profile.pictureUrl,
         type: UserType.Line
       })
     )
@@ -103,7 +103,7 @@ export async function findOneUserBySource(source: line.Group) {
 
 export async function registerUnknownUser(user: string) {
   return database.User.create({
-    display_name: user,
+    displayName: user,
     type: UserType.Unknown
   });
 }
@@ -117,7 +117,7 @@ export async function findOneUnknownUserByDisplayNameInGame(
   game: GameInstance
 ) {
   const user = await database.User.findOne({
-    where: { display_name: name, type: UserType.Unknown },
+    where: { displayName: name, type: UserType.Unknown },
     include: [
       {
         model: database.Game,

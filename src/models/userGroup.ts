@@ -8,7 +8,7 @@ export interface UserGroupAttributes {
 }
 
 export type UserGroupInstance = Sequelize.Instance<UserGroupAttributes> &
-  UserGroupAttributes;
+UserGroupAttributes;
 
 export default (sequalize: Sequelize.Sequelize) => {
   const attributes: SequelizeAttributes<UserGroupAttributes> = {

@@ -1,8 +1,8 @@
-import Sequelize, { Model } from "sequelize";
+import Sequelize from "sequelize";
 import { DatabaseInstance } from "./type";
 import importModels from "./importModels";
 
-const sequelize = new Sequelize.Sequelize(
+const sequelize: Sequelize.Sequelize = new Sequelize.Sequelize(
   process.env.DB_NAME,
   process.env.DB_USER,
   process.env.DB_PASSWORD,
@@ -25,7 +25,7 @@ const sequelize = new Sequelize.Sequelize(
 const db: DatabaseInstance = {
   sequelize,
   Sequelize
-} as DatabaseInstance;
+};
 
 async function defineModels() {
   db.Group.belongsToMany(db.User, { through: db.UserGroup });
@@ -49,8 +49,8 @@ async function defaultDBValue() {
     db.Group.upsert({ id: "Cce9702dfcdf2824f50f89fd9054546c0" }),
     db.User.upsert({
       id: "U89ff8d6dbcf4c745ccbdd17e97d1c714",
-      display_name: "張如賢",
-      picture_url:
+      displayName: "張如賢",
+      pictureUrl:
         "https://profile.line-scdn.net/0hG2kCfXbSGB1WOjI9ZEhnSmp_FnAhFB5VLlxfLnU8Tn16WQpNPlxTf3FqFSgrXl1KYl5efic9TyQu"
     })
   ]);

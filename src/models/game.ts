@@ -5,9 +5,9 @@ export interface GameAttributes {
   id?: string;
   description: string;
   status?: Status;
-  created_time?: Date;
-  start_time?: Date;
-  end_time?: Date;
+  createdTime?: Date;
+  startTime?: Date;
+  endTime?: Date;
   groupId?: string;
   users?: UserInstance[];
 }
@@ -25,18 +25,18 @@ export default (sequalize: Sequelize.Sequelize) => {
       type: Sequelize.STRING
     },
     status: {
-      type: Sequelize.ENUM(Status.Normal, Status.Deleted,Status.Completed),
+      type: Sequelize.ENUM(Status.Normal, Status.Deleted, Status.Completed),
       defaultValue: Status.Normal
     },
-    created_time: {
+    createdTime: {
       type: Sequelize.DATE,
       defaultValue: new Date()
     },
-    start_time: {
+    startTime: {
       type: Sequelize.DATE,
       allowNull: true
     },
-    end_time: {
+    endTime: {
       type: Sequelize.DATE,
       allowNull: true
     }

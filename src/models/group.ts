@@ -4,7 +4,8 @@ export interface GroupAttributes {
   id?: string;
 }
 
-export type GroupInstance = Sequelize.Instance<GroupAttributes> & GroupAttributes;
+export type GroupInstance = Sequelize.Instance<GroupAttributes> &
+GroupAttributes;
 
 export default (sequalize: Sequelize.Sequelize) => {
   const attributes: SequelizeAttributes<GroupAttributes> = {

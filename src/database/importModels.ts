@@ -34,9 +34,9 @@ export default function importModels(db: DatabaseInstance): Promise<string[]> {
         const newname: any = rename(file.replace(regex, ""));
         const model = await import(`${directoryPath}/${file}`);
         const modelInstance = model.default(db.sequelize) as Model<
-          any,
-          any,
-          any
+        any,
+        any,
+        any
         >;
 
         if (modelInstance.associate) {

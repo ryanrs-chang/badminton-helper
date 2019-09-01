@@ -3,8 +3,8 @@ import { UserType } from "../config";
 
 export interface UserAttributes {
   id?: string;
-  display_name?: string;
-  picture_url?: string;
+  displayName?: string;
+  pictureUrl?: string;
   type?: UserType;
 }
 
@@ -24,11 +24,11 @@ export default (
       type: Sequelize.ENUM(UserType.Unknown, UserType.Line),
       defaultValue: UserType.Unknown
     },
-    display_name: {
+    displayName: {
       type: Sequelize.STRING,
       allowNull: false
     },
-    picture_url: {
+    pictureUrl: {
       type: Sequelize.STRING,
       allowNull: true
     }

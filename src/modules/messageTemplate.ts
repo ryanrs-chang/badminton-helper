@@ -52,7 +52,7 @@ export function GroupsMessage(groups: UserGroupInstance[]): line.Message {
     };
   }
 
-  message += `Your management Group List\n`;
+  message += "Your management Group List\n";
   groups.forEach((group, index) => {
     message += `${index + 1}. ${group.groupId}\n`;
   });
@@ -73,7 +73,7 @@ export function GamesMessage(games: GameInstance[]): line.Message {
     };
   }
 
-  message += `Game List\n`;
+  message += "Game List\n";
   games.forEach(game => {
     message += `${game.description}\n`;
   });
@@ -105,7 +105,7 @@ export function SignupMessage(
   message += "\n";
 
   users.forEach((user, index) => {
-    message += `${index + 1}.${user.display_name}\n`;
+    message += `${index + 1}.${user.displayName}\n`;
   });
 
   return {

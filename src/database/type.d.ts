@@ -16,11 +16,11 @@ export type DatabaseInstance = {
   sequelize: Sequelize;
   Sequelize: SequelizeStatic;
 
-  User: Model<UserInstance, UserAttributes>;
-  Group: Model<GroupInstance, GroupAttributes>;
-  UserGroup: Model<UserGroupInstance, UserGroupAttributes>;
-  Role: Model<RoleInstance, RoleAttributes>;
-  Game: Model<GameInstance, GameAttributes>;
-  UserGame: Model<UserGameInstance, UserGameAttributes>;
+  User?: Model<UserInstance, UserAttributes>;
+  Group?: Model<GroupInstance, GroupAttributes>;
+  UserGroup?: Model<UserGroupInstance, UserGroupAttributes>;
+  Role?: Model<RoleInstance, RoleAttributes>;
+  Game?: Model<GameInstance, GameAttributes>;
+  UserGame?: Model<UserGameInstance, UserGameAttributes>;
   [key: string]: any;
 };
