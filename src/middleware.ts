@@ -15,6 +15,8 @@ import {
   registerUnknownUser
 } from "./modules/userHelper";
 
+import koa from "koa";
+
 const logger = LoggerFilename(__filename);
 
 export function registerUserToGroup() {
@@ -113,5 +115,15 @@ export function handleMutipleUser() {
     );
     ctx.users = userIns;
     await next();
+  };
+}
+
+export function responseTime() {
+  return async function(ctx: koa.Context, next: Function) {
+    const start = Date.now();
+    await next();
+    const ms = Date.now() - start;
+    console.log(`response time: ${ms}ms`);
+    ctx.set("X-Response-Time", `${ms}ms`);
   };
 }

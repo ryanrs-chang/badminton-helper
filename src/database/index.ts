@@ -1,6 +1,9 @@
 import Sequelize from "sequelize";
 import { DatabaseInstance } from "./type";
 import importModels from "./importModels";
+import Debug from "debug";
+const debug = Debug("badminton:db:debug");
+const info = Debug("badminton:db");
 
 const sequelize: Sequelize.Sequelize = new Sequelize.Sequelize(
   process.env.DB_NAME,
@@ -10,7 +13,7 @@ const sequelize: Sequelize.Sequelize = new Sequelize.Sequelize(
     host: process.env.DB_URL,
     dialect: "postgres",
     pool: {
-      max: 30,
+      max: 50,
       min: 0,
       acquire: 1000000,
       idle: 10000
@@ -43,23 +46,8 @@ async function defaultDBValue() {
     db.Role.upsert({ id: 0, description: "User", level: 1 }),
     db.Role.upsert({ id: 1, description: "Manager", level: 2 }),
     db.Role.upsert({ id: 2, description: "Maintainer", level: 3 }),
-    db.Role.upsert({ id: 3, description: "Administrator", level: 4 }),
-
-    // temp data
-    db.Group.upsert({ id: "Cce9702dfcdf2824f50f89fd9054546c0" }),
-    db.User.upsert({
-      id: "U89ff8d6dbcf4c745ccbdd17e97d1c714",
-      displayName: "張如賢",
-      pictureUrl:
-        "https://profile.line-scdn.net/0hG2kCfXbSGB1WOjI9ZEhnSmp_FnAhFB5VLlxfLnU8Tn16WQpNPlxTf3FqFSgrXl1KYl5efic9TyQu"
-    })
+    db.Role.upsert({ id: 3, description: "Administrator", level: 4 })
   ]);
-
-  await db.UserGroup.upsert({
-    role: 2,
-    groupId: "Cce9702dfcdf2824f50f89fd9054546c0",
-    userId: "U89ff8d6dbcf4c745ccbdd17e97d1c714"
-  });
 }
 
 export async function init() {
@@ -72,9 +60,9 @@ export async function init() {
     await sequelize.sync();
     await defaultDBValue();
 
-    console.log("Connection has been established successfully.");
+    info("Connection has been established successfully.");
   } catch (error) {
-    console.error("Unable to connect to the database:", error);
+    info("Unable to connect to the database:", error);
     throw error;
   }
 }
