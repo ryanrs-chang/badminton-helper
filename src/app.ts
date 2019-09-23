@@ -3,19 +3,22 @@ dotenv.config();
 
 import Koa from "koa";
 import * as database from "./database";
-import { channelAccessToken, channelSecret } from "./config";
+import { channelAccessToken, channelSecret, path } from "./config";
 import Router from "koa-router";
 import bodyParser from "koa-bodyparser";
-import handleEvent from "./handleEvent";
-import { LineMiddleware } from "./middleware";
 
-const config = {
+import messageRouter from "./controllers";
+import { RouterConfig } from "koa-line-message-router/dist/lib/types";
+
+const config: RouterConfig = {
   channelAccessToken,
-  channelSecret
+  channelSecret,
+  path
 };
 
 const app = new Koa();
 const router = new Router();
+
 app.use(async function(ctx, next) {
   const start = Date.now();
   await next();
@@ -25,21 +28,8 @@ app.use(async function(ctx, next) {
 });
 
 app.use(bodyParser());
-app.use(router.routes());
-app.use(router.allowedMethods());
-
-router.post("/callback", LineMiddleware(config), async ctx => {
-  try {
-    ctx.body = await handleEvent(ctx.request.body.events);
-  } catch (err) {
-    console.error(err);
-    ctx.status = 500;
-  }
-});
-
-router.get("/", async ctx => {
-  ctx.body = "Line Robot";
-});
+app.use(messageRouter.lineSignature(config));
+app.use(messageRouter.routes(config));
 
 async function start() {
   try {
@@ -47,6 +37,7 @@ async function start() {
     app.context.$db = database;
     app.listen(process.env.PORT || 3000);
   } catch (error) {
+    console.log(error);
     process.exit();
   }
 }

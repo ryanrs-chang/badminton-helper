@@ -14,6 +14,7 @@ export function isSignUpInGroup(event: line.WebhookEvent): boolean | string {
   }
 
   const message = event.message.text;
+  
   if (
     /[-\+]1$/g.test(message) ||
     /^本週零打開始報名/g.test(message) ||

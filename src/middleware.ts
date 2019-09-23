@@ -1,29 +1,21 @@
-import line from "@line/bot-sdk";
-import koa from "koa";
-import { createHmac } from "crypto";
-import { isEqual } from "lodash";
-export function LineMiddleware(config: line.Config) {
-  return async function(ctx: koa.Context, next: Function) {
-    const signature = ctx.headers["x-line-signature"] as string;
+import Context from "koa-line-message-router/dist/lib/context";
+import { Group } from "@line/bot-sdk";
+import database from "./database";
+import { Role } from "./config";
 
-    if (!config.channelSecret) {
-      throw new Error("no channel secret");
-    }
+import { LoggerFilename } from "./logger";
+const logger = LoggerFilename(__filename);
 
-    if (!signature) {
-      await next(new Error("no signature"));
-      return;
-    }
-
-    const hash = createHmac("sha256", config.channelSecret)
-      .update(JSON.stringify(ctx.request.body))
-      .digest("base64");
-
-    if (isEqual(hash, signature)) {
-      return await next();
-    }
-
-    await next(new Error(`signature validation failed ${signature}`));
-    return;
+export function registerUserToGroup() {
+  return async function(ctx: Context, next: () => Promise<null>) {
+    logger.debug("registerUserToGroup");
+    const { groupId, userId } = ctx.event.source as Group;
+    // register user to group
+    await database.UserGroup.upsert({
+      groupId,
+      userId,
+      role: Role.User
+    });
+    await next();
   };
 }

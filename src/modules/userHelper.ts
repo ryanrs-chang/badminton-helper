@@ -1,18 +1,16 @@
 import * as line from "@line/bot-sdk";
 import database from "../database";
 import { UserType, LINE_VERIFY_USER_ID, Status } from "../config";
-import Debug from "debug";
 import { GameInstance } from "../models/game";
-const debug = Debug("badminton:userHelper");
 
 /**
  * get User by Group
  * @param client
  * @param source
  */
-export async function updateUserInMessageEvent(
+export async function updateUserWhenMessageEvent(
   client: line.Client,
-  event: line.MessageEvent
+  event: line.WebhookEvent
 ): Promise<void> {
   let line_user: line.Profile;
   let source: line.Group | line.User = event.source as any;
@@ -62,7 +60,7 @@ export async function updateUserInMessageEvent(
   }
 }
 
-export async function updateGroupUserInJoin(
+export async function updateGroupUserWhenJoin(
   client: line.Client,
   event: line.MemberJoinEvent
 ): Promise<void> {

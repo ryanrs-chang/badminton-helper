@@ -1,5 +1,7 @@
 export const channelSecret: string = process.env.API_SECRET;
 export const channelAccessToken: string = process.env.API_ACCESS_TOKEN;
+export const path: string = "/callback";
+
 export enum Role {
   User = 1,
   Manager = 2,
@@ -14,7 +16,7 @@ export enum Status {
 }
 
 export enum UserType {
-  Line = "line",
+  Line = "Line",
   Unknown = "Unknown"
 }
 
