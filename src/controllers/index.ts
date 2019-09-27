@@ -15,7 +15,11 @@ import gameCreate from "./gameCreate";
 import * as signupGame from "./signupGame";
 
 // load middleware
-import { registerUserToGroup } from "../middleware";
+import {
+  registerUserToGroup,
+  hasLatestGame,
+  handleMutipleUser
+} from "../middleware";
 
 const router = new MessageRouter();
 
@@ -69,12 +73,26 @@ router.message(
 );
 
 /**
+ * multiple add user
+ *   #<name 1>;<name 2>;<name 3>;<name 4>;+1
+ */
+router.message(
+  /^\#(.+;?)+\+1$/g,
+  fromGroup(),
+  registerUserToGroup(),
+  hasLatestGame(),
+  handleMutipleUser(),
+  async ctx => {}
+);
+
+/**
  * handle #<name>+1 event
  */
 router.message(
   /^\#.+\+1$/g,
   fromGroup(),
   registerUserToGroup(),
+  hasLatestGame(),
   signupGame.helpTheOtherIncrement
 );
 
@@ -85,6 +103,7 @@ router.message(
   /^\#.+\-1$/g,
   fromGroup(),
   registerUserToGroup(),
+  hasLatestGame(),
   signupGame.helpTheOtherDecrement
 );
 
@@ -95,6 +114,7 @@ router.message(
   /^本週零打報名結束.*/g,
   fromGroup(),
   registerUserToGroup(),
+  hasLatestGame(),
   signupGame.gameIsOver
 );
 
@@ -102,6 +122,14 @@ router.message(
   /^本週零打開始報名.*/g,
   fromGroup(),
   registerUserToGroup(),
+  hasLatestGame(game => {
+    if (game) {
+      return {
+        type: "text",
+        text: "還有零打報名尚未結束"
+      };
+    }
+  }),
   signupGame.gameStart
 );
 

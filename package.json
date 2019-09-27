@@ -37,6 +37,7 @@
     "errorhandler": "^1.5.1",
     "koa": "^2.8.1",
     "koa-bodyparser": "^4.2.1",
+    "koa-line-message-router": "0.0.1",
     "koa-router": "^7.4.0",
     "lodash": "^4.17.15",
     "pg": "^7.12.1",

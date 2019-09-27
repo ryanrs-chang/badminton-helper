@@ -2,6 +2,7 @@ import { LoggerFilename } from "../logger";
 const logger = LoggerFilename(__filename);
 
 import Context from "koa-line-message-router/dist/lib/context";
+
 import {
   findOneUserBySource,
   registerUnknownUser,
@@ -18,6 +19,7 @@ import {
 import { isEmpty } from "lodash";
 import { SignupMessage } from "../modules/messageTemplate";
 import { Group } from "@line/bot-sdk";
+import { LatestGameContext } from "../type";
 
 let replyStartingMessage = "";
 replyStartingMessage += "統計人數就交給我吧！\n\n";
@@ -80,14 +82,9 @@ export async function decrement(ctx: Context) {
  * handle user say #<name>+1
  * @param ctx Context
  */
-export async function helpTheOtherIncrement(ctx: Context) {
+export async function helpTheOtherIncrement(ctx: LatestGameContext) {
   logger.info("helpTheOtherIncrement");
-  const { groupId, userId } = ctx.event.source as Group;
-  const lastestGame = await getLatestGameByGroup(groupId);
-  if (!lastestGame) {
-    logger.debug("no latest game");
-    return;
-  }
+  const latestGame = ctx.latestGame;
 
   const user = await findOneUserBySource(ctx.event.source as Group);
 
@@ -97,7 +94,7 @@ export async function helpTheOtherIncrement(ctx: Context) {
 
   const existUser = await findOneUnknownUserByDisplayNameInGame(
     name,
-    lastestGame
+    latestGame
   );
   if (existUser) {
     logger.info(`${name} exist in game`);
@@ -105,26 +102,21 @@ export async function helpTheOtherIncrement(ctx: Context) {
   }
 
   const unknowUser = await registerUnknownUser(name);
-  const game = await addUserToGame(unknowUser, lastestGame);
+  const game = await addUserToGame(unknowUser, latestGame);
   logger.info(
     `${unknowUser.display_name} order successful! by ${user.display_name}`
   );
 
-  await ctx.$replyMessage(SignupMessage(lastestGame.description, game.users));
+  await ctx.$replyMessage(SignupMessage(latestGame.description, game.users));
 }
 
 /**
  * handle user say #<name>-1
  * @param ctx Context
  */
-export async function helpTheOtherDecrement(ctx: Context) {
+export async function helpTheOtherDecrement(ctx: LatestGameContext) {
   logger.info("helpTheOtherDecrement");
-  const { groupId, userId } = ctx.event.source as Group;
-  const lastestGame = await getLatestGameByGroup(groupId);
-  if (!lastestGame) {
-    logger.debug("no latest game");
-    return;
-  }
+  const lastestGame = ctx.latestGame;
 
   const name = getSafeName(ctx.text);
   if (!name) return;
@@ -146,18 +138,9 @@ export async function helpTheOtherDecrement(ctx: Context) {
  * handle user say 本週零打報名開始
  * @param ctx Context
  */
-export async function gameStart(ctx: Context) {
+export async function gameStart(ctx: LatestGameContext) {
   logger.info("gameStart");
-  const { groupId, userId } = ctx.event.source as Group;
-  const lastestGame = await getLatestGameByGroup(groupId);
-
-  if (lastestGame) {
-    ctx.$replyMessage({
-      type: "text",
-      text: "還有零打報名尚未結束"
-    });
-    return;
-  }
+  const { groupId } = ctx.event.source as Group;
 
   const game = await createNewGame(groupId, {
     description: ctx.text
@@ -173,13 +156,8 @@ export async function gameStart(ctx: Context) {
  * handle user say 本週零打報名結束
  * @param ctx Context
  */
-export async function gameIsOver(ctx: Context) {
-  const { groupId, userId } = ctx.event.source as Group;
-  const lastestGame = await getLatestGameByGroup(groupId);
-  if (!lastestGame) {
-    logger.debug("no latest game");
-    return;
-  }
+export async function gameIsOver(ctx: LatestGameContext) {
+  const lastestGame = ctx.latestGame;
 
   const game = await endGame(lastestGame);
   const users = game.users;
