@@ -2,7 +2,6 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import Koa from "koa";
-import Router from "koa-router";
 import views from "koa-views";
 import koaStatic from "koa-static";
 import path from "path";
@@ -27,7 +26,6 @@ const config: RouterConfig = {
 };
 
 const app = new Koa();
-const router = new Router();
 
 app.use(responseTime());
 
@@ -44,19 +42,12 @@ app.use(
   })
 );
 
+app.use(bodyParser());
+
 app.use(liffRouter.routes());
 
-app.use(bodyParser());
 app.use(messageRouter.lineSignature(config));
 app.use(messageRouter.routes(config));
-
-router.get("/liff", async ctx => {
-  await ctx.render("index");
-});
-
-router.get("/", async ctx => {
-  ctx.body = "Line Robot";
-});
 
 async function start() {
   try {
