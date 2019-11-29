@@ -71,15 +71,22 @@ export function hasLatestGame(
 
 export function handleMutipleUser() {
   return async function handleMutipleUser(
-    ctx: UsersContext & LatestGameContext
+    ctx: UsersContext & LatestGameContext,
+    next: () => Promise<void>
   ) {
-    console.log(ctx.event);
     const temp: { [key: string]: number } = {};
 
     let users = ctx.text
       .substring(0, ctx.text.length - 2)
       .split("\n")
       .filter(str => !_.isEmpty(str))
+      .map(user => user.trim())
+      .map(user => {
+        if (user.startsWith("@")) {
+          return user.substring(1);
+        }
+        return user;
+      })
       .filter(user => {
         //
         // remove duplicates
@@ -89,10 +96,7 @@ export function handleMutipleUser() {
         }
         temp[user] = 1;
         return true;
-      })
-      .map(user => user.trim());
-
-    console.log(users);
+      });
 
     const userIns = await Promise.all(
       users.map(async user => {
@@ -108,5 +112,6 @@ export function handleMutipleUser() {
       })
     );
     ctx.users = userIns;
+    await next();
   };
 }

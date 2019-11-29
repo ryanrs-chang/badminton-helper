@@ -17,9 +17,9 @@ import {
 } from "../modules/gameHelper";
 
 import { isEmpty } from "lodash";
-import { SignupMessage } from "../modules/messageTemplate";
+import { SignupMessage, HelloMessage } from "../modules/messageTemplate";
 import { Group } from "@line/bot-sdk";
-import { LatestGameContext } from "../type";
+import { LatestGameContext, UsersContext } from "../type";
 
 let replyStartingMessage = "";
 replyStartingMessage += "統計人數就交給我吧！\n\n";
@@ -82,31 +82,13 @@ export async function decrement(ctx: Context) {
  * handle user say #<name>+1
  * @param ctx Context
  */
-export async function helpTheOtherIncrement(ctx: LatestGameContext) {
+export async function helpTheOtherIncrement(
+  ctx: LatestGameContext & UsersContext
+) {
   logger.info("helpTheOtherIncrement");
   const latestGame = ctx.latestGame;
-
-  const user = await findOneUserBySource(ctx.event.source as Group);
-
-  const name = getSafeName(ctx.text);
-  if (!name) return;
-  logger.info("[#Name+1]", name);
-
-  const existUser = await findOneUnknownUserByDisplayNameInGame(
-    name,
-    latestGame
-  );
-  if (existUser) {
-    logger.info(`${name} exist in game`);
-    return;
-  }
-
-  const unknowUser = await registerUnknownUser(name);
-  const game = await addUserToGame(unknowUser, latestGame);
-  logger.info(
-    `${unknowUser.display_name} order successful! by ${user.display_name}`
-  );
-
+  const game = await addUserToGame(ctx.users, latestGame);
+  logger.info(`${ctx.users.map(u => u.display_name)} order successful!`);
   await ctx.$replyMessage(SignupMessage(latestGame.description, game.users));
 }
 

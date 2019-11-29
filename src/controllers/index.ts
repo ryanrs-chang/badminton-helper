@@ -78,26 +78,13 @@ router.message(
  *   #<name 1>;<name 2>;<name 3>;<name 4>+1
  */
 router.message(
-  /^(\@.+[\n])+\+1$/g,
+  /^(\@.+[\n]*)+\+1$/g,
   fromGroup(),
   registerUserToGroup(),
   hasLatestGame(),
   handleMutipleUser(),
-  async ctx => {
-    console.log("handle message multi");
-  }
+  signupGame.helpTheOtherIncrement
 );
-
-// /**
-//  * handle #<name>+1 event
-//  */
-// router.message(
-//   /^\#.+\+1$/g,
-//   fromGroup(),
-//   registerUserToGroup(),
-//   hasLatestGame(),
-//   signupGame.helpTheOtherIncrement
-// );
 
 // /**
 //  * handle #<name>-1 event

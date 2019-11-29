@@ -5,6 +5,7 @@ import { UserInstance } from "../models/user";
 import { UserGameInstance } from "../models/user_game";
 import { Status } from "../config";
 import sequelize = require("sequelize");
+import isArray from "lodash/isArray";
 
 export async function getLatestGameByGroup(
   groupId: string
@@ -49,15 +50,26 @@ export async function findGameWithMembers(
  * @param user user instance
  */
 export async function addUserToGame(
-  user: UserInstance,
+  user: UserInstance | UserInstance[],
   game: GameInstance
 ): Promise<GameInstance> {
-  const updated = await database.UserGame.upsert({
-    userId: user.id,
-    gameId: game.id,
-    status: Status.Normal,
-    updated_time: new Date()
-  });
+  let userSet = [];
+  if (isArray(user)) {
+    userSet = user;
+  } else {
+    userSet = [user];
+  }
+
+  await Promise.all(
+    userSet.map(u => {
+      return database.UserGame.upsert({
+        userId: u.id,
+        gameId: game.id,
+        status: Status.Normal,
+        updated_time: new Date()
+      });
+    })
+  );
 
   return await findGameWithMembers(game);
 }

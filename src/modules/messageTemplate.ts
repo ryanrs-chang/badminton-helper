@@ -7,6 +7,17 @@ import { UserInstance } from "../models/user";
  * Help Message: user say help!!
  *
  */
+export function HelloMessage(): line.Message {
+  return {
+    type: "text",
+    text: "Hello Message"
+  };
+}
+
+/**
+ * Help Message: user say help!!
+ *
+ */
 export function HelpMessage(): line.TemplateMessage {
   return {
     type: "template",
