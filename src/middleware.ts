@@ -10,6 +10,10 @@ import { LatestGameContext, UsersContext } from "./type";
 import { GameInstance } from "./models/game";
 
 import { getLatestGameByGroup } from "./modules/gameHelper";
+import {
+  findOneUnknownUserByDisplayNameInGame,
+  registerUnknownUser
+} from "./modules/userHelper";
 
 const logger = LoggerFilename(__filename);
 
@@ -66,16 +70,43 @@ export function hasLatestGame(
 }
 
 export function handleMutipleUser() {
-  return async function handleMutipleUser(ctx: UsersContext) {
-    const users = ctx.text
-      .substring(1, ctx.text.length - 2)
-      .split(";")
+  return async function handleMutipleUser(
+    ctx: UsersContext & LatestGameContext
+  ) {
+    console.log(ctx.event);
+    const temp: { [key: string]: number } = {};
+
+    let users = ctx.text
+      .substring(0, ctx.text.length - 2)
+      .split("\n")
       .filter(str => !_.isEmpty(str))
-      .map(user => {
+      .filter(user => {
         //
-        // TODO: mapping or register user to database
+        // remove duplicates
         //
-      });
-    ctx.users = users as [];
+        if (temp[user]) {
+          return false;
+        }
+        temp[user] = 1;
+        return true;
+      })
+      .map(user => user.trim());
+
+    console.log(users);
+
+    const userIns = await Promise.all(
+      users.map(async user => {
+        const userIns = await findOneUnknownUserByDisplayNameInGame(
+          user,
+          ctx.latestGame
+        );
+        if (userIns) {
+          return userIns;
+        }
+
+        return await registerUnknownUser(user);
+      })
+    );
+    ctx.users = userIns;
   };
 }

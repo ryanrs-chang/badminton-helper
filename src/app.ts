@@ -3,12 +3,16 @@ dotenv.config();
 
 import Koa from "koa";
 import * as database from "./database";
+import { LoggerFilename } from "./logger";
+const logger = LoggerFilename(__filename);
+
 import { channelAccessToken, channelSecret, path } from "./config";
-import Router from "koa-router";
 import bodyParser from "koa-bodyparser";
 
 import messageRouter from "./controllers";
 import { RouterConfig } from "koa-line-message-router/dist/lib/types";
+
+import liffRouter from "./liff";
 
 const config: RouterConfig = {
   channelAccessToken,
@@ -17,15 +21,16 @@ const config: RouterConfig = {
 };
 
 const app = new Koa();
-const router = new Router();
 
 app.use(async function(ctx, next) {
   const start = Date.now();
   await next();
   const ms = Date.now() - start;
-  console.log(`response time: ${ms}ms`);
+  logger.info(`response time: ${ms}ms`);
   ctx.set("X-Response-Time", `${ms}ms`);
 });
+
+app.use(liffRouter.routes());
 
 app.use(bodyParser());
 app.use(messageRouter.lineSignature(config));
@@ -37,7 +42,7 @@ async function start() {
     app.context.$db = database;
     app.listen(process.env.PORT || 3000);
   } catch (error) {
-    console.log(error);
+    logger.info(error);
     process.exit();
   }
 }

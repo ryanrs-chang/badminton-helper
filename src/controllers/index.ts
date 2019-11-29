@@ -24,6 +24,7 @@ import {
 const router = new MessageRouter();
 
 router.use(async (ctx, next) => {
+  console.log(ctx.text.toString());
   await next();
 });
 
@@ -74,38 +75,40 @@ router.message(
 
 /**
  * multiple add user
- *   #<name 1>;<name 2>;<name 3>;<name 4>;+1
+ *   #<name 1>;<name 2>;<name 3>;<name 4>+1
  */
 router.message(
-  /^\#(.+;?)+\+1$/g,
+  /^(\@.+[\n])+\+1$/g,
   fromGroup(),
   registerUserToGroup(),
   hasLatestGame(),
   handleMutipleUser(),
-  async ctx => {}
+  async ctx => {
+    console.log("handle message multi");
+  }
 );
 
-/**
- * handle #<name>+1 event
- */
-router.message(
-  /^\#.+\+1$/g,
-  fromGroup(),
-  registerUserToGroup(),
-  hasLatestGame(),
-  signupGame.helpTheOtherIncrement
-);
+// /**
+//  * handle #<name>+1 event
+//  */
+// router.message(
+//   /^\#.+\+1$/g,
+//   fromGroup(),
+//   registerUserToGroup(),
+//   hasLatestGame(),
+//   signupGame.helpTheOtherIncrement
+// );
 
-/**
- * handle #<name>-1 event
- */
-router.message(
-  /^\#.+\-1$/g,
-  fromGroup(),
-  registerUserToGroup(),
-  hasLatestGame(),
-  signupGame.helpTheOtherDecrement
-);
+// /**
+//  * handle #<name>-1 event
+//  */
+// router.message(
+//   /^\#.+\-1$/g,
+//   fromGroup(),
+//   registerUserToGroup(),
+//   hasLatestGame(),
+//   signupGame.helpTheOtherDecrement
+// );
 
 /**
  * handle finish game
