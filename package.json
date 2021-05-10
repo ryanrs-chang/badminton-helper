@@ -39,7 +39,7 @@
     "koa-bodyparser": "^4.2.1",
     "koa-line-message-router": "0.0.1",
     "koa-router": "^7.4.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.21",
     "pg": "^7.12.1",
     "pg-hstore": "^2.3.3",
     "qs": "^6.8.0",
