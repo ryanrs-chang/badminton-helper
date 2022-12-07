@@ -42,7 +42,7 @@
     "lodash": "^4.17.15",
     "pg": "^7.12.1",
     "pg-hstore": "^2.3.3",
-    "qs": "^6.8.0",
+    "qs": "^6.7.3",
     "sequelize": "^4.44.3"
   },
   "devDependencies": {
